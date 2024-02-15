@@ -3,6 +3,7 @@
 - name: Common installation for server.
   hosts: hostlab
   gather_facts: yes
+  become: true
   tasks:
     - name: Update SSH configuration
       ansible.builtin.lineinfile:
