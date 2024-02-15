@@ -16,15 +16,20 @@
         regexp: "^PasswordAuthentication "
         line: "PasswordAuthentication {{ ssh_password_authentication }}"
 
-    # - name: Configure locale settings
-    #   ansible.builtin.shell:
-    #     cmd: "{{ locale_gen_command }}"
-    #     creates: "/etc/locale.gen"
-    #   environment:
-    #     LC_ALL: "en_US.UTF-8"
-    #     LANG: "en_US.UTF-8"
+    - name: Restart SSH service
+      ansible.builtin.service:
+        name: sshd
+        state: restarted
 
-    # - name: Install essential packages
-    #   apt:
-    #     name: "{{ apt_packages }}"
-    #     state: present
+    - name: Configure locale settings
+      ansible.builtin.shell:
+        cmd: "{{ locale_gen_command }}"
+        creates: "/etc/locale.gen"
+      environment:
+        LC_ALL: "en_US.UTF-8"
+        LANG: "en_US.UTF-8"
+
+    - name: Install essential packages
+      apt:
+        name: "{{ apt_packages }}"
+        state: present
