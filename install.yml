@@ -1,8 +1,9 @@
+#install.yaml
 ---
-- name: Installation Setup
-  become: yes
-
+- name: Get hostname and IP address of Alpine hosts
+  hosts: hostlab
+  gather_facts: yes
   tasks:
-    - name: Run apt update
-      ansible.builtin.apt:
-        update_cache: yes
+    - name: Display hostname and IP address
+      debug:
+        msg: "Hostname: {{ ansible_hostname }}, IP Address: {{ ansible_default_ipv4.address }}"
