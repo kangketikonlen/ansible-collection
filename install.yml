@@ -15,7 +15,6 @@
         path: /etc/ssh/sshd_config
         regexp: "^PasswordAuthentication "
         line: "PasswordAuthentication {{ ssh_password_authentication }}"
-      notify: Restart SSH service
 
     # - name: Configure locale settings
     #   ansible.builtin.shell:
