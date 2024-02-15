@@ -2,8 +2,8 @@
 ---
 - name: Common installation for server.
   hosts: hostlab
-  gather_facts: yes
-  become: yes
+  become_method: sudo
+  become_user: root
   tasks:
     - name: Add current user to sudoers file
       ansible.builtin.blockinfile:
