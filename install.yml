@@ -5,18 +5,18 @@
   gather_facts: yes
   become: yes
   tasks:
+    - name: Add current user to sudoers file
+      ansible.builtin.blockinfile:
+        path: /etc/sudoers
+        block: "{{ sudoers_block }}"
+        marker: "# {mark} ANSIBLE MANAGED BLOCK"
+
     - name: Update SSH configuration
       ansible.builtin.lineinfile:
         path: /etc/ssh/sshd_config
         regexp: "^PasswordAuthentication "
         line: "PasswordAuthentication {{ ssh_password_authentication }}"
       notify: Restart SSH service
-
-    # - name: Add current user to sudoers file
-    #   ansible.builtin.blockinfile:
-    #     path: /etc/sudoers
-    #     block: "{{ sudoers_block }}"
-    #     marker: "# {mark} ANSIBLE MANAGED BLOCK"
 
     # - name: Configure locale settings
     #   ansible.builtin.shell:
