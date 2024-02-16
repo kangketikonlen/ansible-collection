@@ -18,7 +18,7 @@
 
     - name: Fetch the archived backup from remote host
       fetch:
-        src: "/path/to/remote/backup_{{ ansible_date_time.iso8601_basic_short }}.zip"
+        src: "/tmp/backup_{{ ansible_date_time.iso8601_basic_short }}.zip"
         dest: "{{ local_download_path }}"
         flat: yes
 
