@@ -5,7 +5,7 @@
 
   vars:
     backup_folder_path: "/home/{{ ansible_user }}/backups"
-    local_download_path: "/downloads/{{ ansible_hostname }}/"
+    local_download_path: "/tmp/downloads/{{ ansible_hostname }}/"
 
   tasks:
     - name: Archive the backup folder
