@@ -16,10 +16,11 @@
         format: zip
       become: yes
 
-    - name: Synchronize the archived backup
-      synchronize:
-        src: "/tmp/backup_{{ ansible_date_time.iso8601_basic_short }}.zip"
+    - name: Fetch the archived backup from remote host
+      fetch:
+        src: "/path/to/remote/backup_{{ ansible_date_time.iso8601_basic_short }}.zip"
         dest: "{{ local_download_path }}"
+        flat: yes
 
     - name: Remove temporary archive on the remote server
       file:
