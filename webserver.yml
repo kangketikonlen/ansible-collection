@@ -11,8 +11,26 @@
         version: "{{ repository_branch }}"
         force: yes
       environment:
-        GIT_SSH_COMMAND: "ssh -i {{ repository_private_key }}"
+        GIT_SSH_COMMAND: "ssh -i {{ repository_private_key }} -o StrictHostKeyChecking=no"
       register: webserver_clone_result
+
+    - name: Check if .env file exists
+      ansible.builtin.stat:
+        path: "{{ repository_folder_dest }}/.env"
+      register: env_file_stat
+
+    - name: Create .env file
+      ansible.builtin.copy:
+        content: |
+          # Mariadb environment
+          MYSQL_ROOT_PASSWORD={{ database_root_password }}
+          MYSQL_USER=sysadmin
+          MYSQL_PASSWORD={{ database_user_password }}
+          # Openlitespeed environment
+          TimeZone=Asia/Jakarta
+          DOMAIN=localhost
+        dest: "{{ repository_folder_dest }}/.env"
+      when: env_file_stat.stat.exists == false
 
     - name: Run Docker Compose
       ansible.builtin.docker_compose:
@@ -20,6 +38,10 @@
         project_name: "{{ repository_name }}"
         state: present
       register: webserver_compose_result
+
+    - name: 5 secs of delay added waiting for webserver up
+      pause:
+        seconds: 5
 
     - name: Check if the server is reachable
       uri:
