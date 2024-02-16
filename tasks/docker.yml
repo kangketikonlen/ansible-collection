@@ -71,6 +71,11 @@
       command: echo "{{ github_token }} | docker_login ghcr.io --username {{ docker_username }} --password-stdin"
       become: false
 
+    - name: Check if the webserver exists
+      stat:
+        path: "{{ repository_folder_dest }}"
+      register: webserver_folder_result
+    
     - name: Clone the repository
       ansible.builtin.git:
         repo: "{{ repository_url }}"
@@ -79,7 +84,7 @@
         force: true
       environment:
         GIT_SSH_COMMAND: "ssh -i {{ repository_private_key }} -o StrictHostKeyChecking=no"
-      register: webserver_clone_result
+      when: webserver_folder_result.stat.exists == false
 
     - name: Check if .env file exists
       ansible.builtin.stat:
