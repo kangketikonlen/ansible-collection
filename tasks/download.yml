@@ -2,7 +2,7 @@
 ---
 - name: Download and archive backup folder
   hosts: all
-  become: yes
+  become: true
 
   vars:
     backup_folder_path: "/home/{{ ansible_user }}/backups"
@@ -16,11 +16,11 @@
         format: zip
       become: yes
 
-    - name: Download the archived backup
-      fetch:
+    - name: Synchronize the archived backup
+      synchronize:
         src: "/tmp/backup_{{ ansible_date_time.iso8601_basic_short }}.zip"
         dest: "{{ local_download_path }}"
-        flat: yes
+
 
     - name: Remove temporary archive on the remote server
       file:
