@@ -93,6 +93,7 @@
           MYSQL_ROOT_PASSWORD={{ database_root_password }}
           MYSQL_USER=sysadmin
           MYSQL_PASSWORD={{ database_user_password }}
+          MYSQL_PASSWORD={{ database_port_forward }}
           # Openlitespeed environment
           TimeZone=Asia/Jakarta
           DOMAIN=localhost
