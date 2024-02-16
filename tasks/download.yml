@@ -14,10 +14,6 @@
         path: "{{ backup_folder_path }}"
         dest: "/tmp/backup_{{ ansible_date_time.iso8601_basic_short }}.tar.gz"
         format: gz
-        gzip_options: "-9"  # Optional: Set compression level (default is -9, maximum compression)
-        force: yes  # Optional: Force compression even if destination already exists
-        extra_args: "--use-compress-program=pigz"  # Optional: Use pigz for parallel compression
-        split: "100m"  # Split the archive into 100MB chunks
       become: yes
 
     - name: Fetch the archived backup from remote host
