@@ -1,6 +1,6 @@
 ---
 - name: Download and archive backup folder
-  hosts: all
+  hosts: hostlab
   become: yes
 
   vars:

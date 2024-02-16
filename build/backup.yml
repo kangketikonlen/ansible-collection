@@ -1,6 +1,6 @@
 ---
 - name: Run backup script and set up cron jobs
-  hosts: all
+  hosts: hostlab
   become: yes
 
   tasks:
