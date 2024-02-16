@@ -10,7 +10,7 @@
         dest: /usr/local/bin/backup_docker
         mode: "0755"
 
-    - name: Run the backup scråipt
+    - name: Run the backup script
       command: /usr/local/bin/backup_docker {{ ansible_user }}
       become: yes
 
