@@ -76,7 +76,7 @@
         repo: "{{ repository_url }}"
         dest: "{{ repository_folder_dest }}"
         version: "{{ repository_branch }}"
-        force: false
+        force: true
       environment:
         GIT_SSH_COMMAND: "ssh -i {{ repository_private_key }} -o StrictHostKeyChecking=no"
       register: webserver_clone_result
