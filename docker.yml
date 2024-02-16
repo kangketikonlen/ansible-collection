@@ -1,4 +1,4 @@
-#install.yaml
+#docker.yaml
 ---
 - name: Common installation for server.
   hosts: hostlab
