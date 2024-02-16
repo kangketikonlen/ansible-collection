@@ -1,35 +1,31 @@
-#install.yaml
+# common.yml
 ---
-- name: Common installation for server.
-  hosts: hostlab
-  become: true
-  tasks:
-    - name: Add current user to sudoers file
-      ansible.builtin.blockinfile:
-        path: /etc/sudoers
-        block: "{{ sudoers_block }}"
-        marker: "# {mark} ANSIBLE MANAGED BLOCK"
+- name: Add current user to sudoers file
+  ansible.builtin.blockinfile:
+    path: /etc/sudoers
+    block: "{{ sudoers_block }}"
+    marker: "# {mark} ANSIBLE MANAGED BLOCK"
 
-    - name: Update SSH configuration
-      ansible.builtin.lineinfile:
-        path: /etc/ssh/sshd_config
-        regexp: "^PasswordAuthentication "
-        line: "PasswordAuthentication {{ ssh_password_authentication }}"
+- name: Update SSH configuration
+  ansible.builtin.lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: "^PasswordAuthentication "
+    line: "PasswordAuthentication {{ ssh_password_authentication }}"
 
-    - name: Restart SSH service
-      ansible.builtin.service:
-        name: sshd
-        state: restarted
+- name: Restart SSH service
+  ansible.builtin.service:
+    name: sshd
+    state: restarted
 
-    - name: Configure locale settings
-      ansible.builtin.shell:
-        cmd: "{{ locale_gen_command }}"
-        creates: "/etc/locale.gen"
-      environment:
-        LC_ALL: "en_US.UTF-8"
-        LANG: "en_US.UTF-8"
+- name: Configure locale settings
+  ansible.builtin.shell:
+    cmd: "{{ locale_gen_command }}"
+    creates: "/etc/locale.gen"
+  environment:
+    LC_ALL: "en_US.UTF-8"
+    LANG: "en_US.UTF-8"
 
-    - name: Install essential packages
-      apt:
-        name: "{{ apt_packages }}"
-        state: present
+- name: Install essential packages
+  apt:
+    name: "{{ apt_packages }}"
+    state: present
