@@ -1,7 +1,7 @@
 # backup.yaml
 ---
 - name: Run backup script and set up cron jobs
-  hosts: hostlab
+  hosts: all
   become: yes
 
   tasks:
