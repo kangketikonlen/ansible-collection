@@ -1,6 +1,6 @@
 #docker.yaml
 ---
-- name: Common installation for server.
+- name: Docker engine installation
   hosts: hostlab
   become: true
   tasks:
