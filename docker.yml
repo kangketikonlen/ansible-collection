@@ -1,0 +1,72 @@
+#install.yaml
+---
+- name: Common installation for server.
+  hosts: hostlab
+  become: true
+  tasks:
+    - name: Add Docker GPG key
+      apt_key:
+        url: "{{ docker_gpg_key_url }}"
+        state: present
+
+    - name: Add Docker APT repository
+      apt_repository:
+        repo: "{{ docker_apt_repo }}"
+        state: present
+
+    - name: Update apt packages
+      apt:
+        update_cache: false
+
+    - name: Install docker essential packages
+      apt:
+        name: "{{ apt_packages }}"
+        state: present
+
+    - name: Check if SSH key pair exists
+      stat:
+        path: ~/.ssh/id_rsa.pub
+      become: false
+      register: key_stat
+
+    - name: Generate SSH key pair without passphrase
+      command: ssh-keygen -t rsa -b 2048 -f ~/.ssh/id_rsa -N ''
+      when: key_stat.stat.exists == false
+      become: false
+
+    - name: Fetch remote id_rsa.pub
+      fetch:
+        src: "/home/{{ ansible_user }}/.ssh/id_rsa.pub"
+        dest: "./tmp/{{ ansible_hostname }}/key.pub"
+        flat: yes
+      when: key_stat.stat.exists == false
+
+    - name: Add SSH key to GitHub
+      uri:
+        url: "https://api.github.com/user/keys"
+        method: POST
+        body_format: json
+        body:
+          title: "Ansible: {{ ansible_user }}@{{ ansible_hostname }}"
+          key: "{{ lookup('file', './tmp/{{ ansible_hostname }}/key.pub') }}"
+        headers:
+          Authorization: "token {{ github_token }}"
+        status_code: 201
+      register: result
+      when: key_stat.stat.exists == false
+
+    - name: Ensure the existence of the Docker folder
+      ansible.builtin.file:
+        path: "{{ docker_remote_path }}"
+        state: directory
+
+    - name: Add current user to the Docker group
+      user:
+        name: "{{ ansible_user }}"
+        groups: docker
+        append: yes
+        state: present
+
+    - name: Run Docker login command
+      command: echo "{{ github_token }} | docker_login ghcr.io --username {{ docker_username }} --password-stdin"
+      become: false
