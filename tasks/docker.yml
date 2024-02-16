@@ -1,7 +1,7 @@
 #docker.yaml
 ---
 - name: Docker engine installation
-  hosts: hostlab
+  hosts: all
   become: true
   tasks:
     - name: Add Docker GPG key
