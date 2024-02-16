@@ -20,7 +20,6 @@
       synchronize:
         src: "/tmp/backup_{{ ansible_date_time.iso8601_basic_short }}.zip"
         dest: "{{ local_download_path }}"
-        transfer: scp
 
     - name: Remove temporary archive on the remote server
       file:
