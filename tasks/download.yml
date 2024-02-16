@@ -12,23 +12,23 @@
     - name: Archive the backup folder
       archive:
         path: "{{ backup_folder_path }}"
-        dest: "/tmp/backup_{{ ansible_date_time.iso8601_basic_short }}.zip"
-        format: zip
+        dest: "/tmp/backup_{{ ansible_date_time.iso8601_basic_short }}.tar.gz"
+        format: gz
+        gzip_options: "-9"  # Optional: Set compression level (default is -9, maximum compression)
+        force: yes  # Optional: Force compression even if destination already exists
+        extra_args: "--use-compress-program=pigz"  # Optional: Use pigz for parallel compression
+        split: "100m"  # Split the archive into 100MB chunks
       become: yes
 
-    - name: Run SCP command
-      ansible.builtin.command: scp -r -i ~/.ssh/id_rsa {{ ansible_user }}@{{  ansible_host  }}:/tmp/backup_{{ ansible_date_time.iso8601_basic_short }}.zip {{ local_download_path }}
-      become: no
-
-    # - name: Fetch the archived backup from remote host
-    #   fetch:
-    #     src: "/tmp/backup_{{ ansible_date_time.iso8601_basic_short }}.zip"
-    #     dest: "{{ local_download_path }}"
-    #     flat: yes
-    #   timeout: 3600  # Set the timeout to 1 hour (in seconds)
+    - name: Fetch the archived backup from remote host
+      fetch:
+        src: "/tmp/backup_{{ ansible_date_time.iso8601_basic_short }}.tar.gz"
+        dest: "{{ local_download_path }}"
+        flat: yes
+      timeout: 3600  # Set the timeout to 1 hour (in seconds)
 
     - name: Remove temporary archive on the remote server
       file:
-        path: "/tmp/backup_{{ ansible_date_time.iso8601_basic_short }}.zip"
+        path: "/tmp/backup_{{ ansible_date_time.iso8601_basic_short }}.tar.gz"
         state: absent
       become: yes
