@@ -1,6 +1,7 @@
+# download.yaml
 ---
 - name: Download and archive backup folder
-  hosts: hostlab
+  hosts: all
   become: yes
 
   vars:
